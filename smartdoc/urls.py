@@ -28,10 +28,35 @@ from common.response.result import Result
 from common.util.cache_util import get_cache
 from smartdoc import settings
 from smartdoc.conf import PROJECT_DIR
+from django.shortcuts import redirect
+from django.urls import path, include
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from django.contrib import admin
+
 
 urlpatterns = [
-    path("api/", include("users.urls")),
+    # path("api/", include("users.urls")),
+    path('admin/', admin.site.urls),
+
+    # path("api/", include("setting.urls")),  # 添加setting应用的URL
+    # path("api/polls/", include("backend_re.polls.urls")),  # 添加polls应用的URL
+
+    path("api/dashboard/", include("backend_re.dashboard.urls")),  # dashboard
+    path("api/settings/", include("backend_re.settings.urls")),  # settings
+    path("api/detections/", include("backend_re.detection.urls")),  # detection
+    path("api/annotation/", include("backend_re.annotation.urls")),  # annotation
+    path("api/models_train/", include("backend_re.modles_train.urls")),  # 添加trains应用的URL
+    path("api/cv_operation/", include("backend_re.cv_operation.urls")),  # cv_operation
+    path("api/cameras/", include("backend_re.cameras.urls")),  # cameras
 ]
+
+# urlpatterns = [
+#     path("", lambda request: redirect("schema-swagger-ui", permanent=False)),  # 首页跳转到 Swagger UI
+#     path("api/", include("users.urls")),
+#     path("doc/", SpectacularSwaggerView.as_view(url_name="schema"), name="schema-swagger-ui"),
+#     path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="schema-redoc"),
+#     path("doc<format>/", SpectacularAPIView.as_view(), name="schema-json"),
+# ]
 
 
 def pro():
@@ -66,5 +91,8 @@ def page_not_found(request, exception):
 
 
 handler404 = page_not_found
-# init_doc(urlpatterns, application_urlpatterns)
-init_doc(application_urlpatterns=urlpatterns,patterns=None)
+# # init_doc(urlpatterns, application_urlpatterns)
+# init_doc(application_urlpatterns=urlpatterns,patterns=None)
+
+# 初始化API文档 - 在urlpatterns定义完成后调用
+init_doc(urlpatterns, None)

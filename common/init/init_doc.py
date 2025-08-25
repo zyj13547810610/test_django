@@ -14,13 +14,14 @@ from django.utils.translation import gettext_lazy as _
 def init_app_doc(application_urlpatterns):
     schema_view = get_schema_view(
         openapi.Info(
-            title="Python API",
+            title="测试 API",
             default_version='v1',
-            description=_('Intelligent customer service platform'),
+            description=_('Intelligent customer service platform,标题配置：common\init\init_doc.py,主路由：smartdoc/urls.py,smartdoc\settings\base.py'),
         ),
         public=True,
         permission_classes=[permissions.AllowAny],
-        authentication_classes=[AnonymousAuthentication]
+        authentication_classes=[AnonymousAuthentication],
+        # url="http://127.0.0.1:8000"  # 添加这个参数来解决 HTTPS/HTTP 混合内容问题
     )
     application_urlpatterns += [
         re_path(r'^doc(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0),
@@ -33,13 +34,14 @@ def init_app_doc(application_urlpatterns):
 def init_chat_doc(application_urlpatterns, patterns):
     chat_schema_view = get_schema_view(
         openapi.Info(
-            title="Python API",
+            title="测试 API：D:\终点\model-develop-standard_dev\common\init\init_doc.py",
             default_version='/chat',
-            description=_('Intelligent customer service platform'),
+            description=_('Intelligent customer service platform，标题配置：common\init\init_doc.py,主路由：smartdoc/urls.py'),
         ),
         public=True,
         permission_classes=[permissions.AllowAny],
         authentication_classes=[AnonymousAuthentication],
+        # url="http://127.0.0.1:8000",  # 添加这个参数来解决 HTTPS/HTTP 混合内容问题
         patterns=[
             URLPattern(pattern='api/' + str(url.pattern), callback=url.callback, default_args=url.default_args,
                        name=url.name)

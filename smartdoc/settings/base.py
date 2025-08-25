@@ -28,24 +28,47 @@ DATABASES = {
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# 上传文件目录
+MEDIA_URL = '/uploads/'
+MEDIA_ROOT = BASE_DIR / "uploads"
+
+# 确保上传目录存在
+if not os.path.exists(MEDIA_ROOT):
+    os.makedirs(MEDIA_ROOT)
+if not os.path.exists(BASE_DIR / "dist"):
+    os.makedirs(BASE_DIR / "dist")
+    
 # Application definition
 
 INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'setting',
+
+    'backend_re.dashboard.apps.DashBoardConfig',  # 添加dashboard应用
+    'backend_re.settings.apps.SettingsConfig',  # 添加settings应用
+    'backend_re.apps.BackendConfig',  # 添加backend.backend应用
+    'backend_re.detection.apps.DetectionConfig',  # 添加detection应用
+    'backend_re.annotation.apps.AnnotationConfig',  # 添加annotation应用
+    'backend_re.modles_train.apps.TrainsConfig',  # 添加trains应用
+    'backend_re.cv_operation.apps.Cv_OperationConfig',  # 添加cv_operation应用
+    'backend_re.cameras.apps.CamerasConfig',  # 添加cameras应用
     # 'dataset',
     # 'application',
     # 'embedding',
+    'django.contrib.admin',
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sessions',    # <=== 需要确保这里有
+    'corsheaders',  # 添加 CORS 支持
     'rest_framework',
     "drf_yasg",  # swagger 接口
     'django_filters',  # 条件过滤
     'django_apscheduler',
     'common',
     # 'function_lib',
-    'django_celery_beat'
+    'django_celery_beat',
 
 ]
 
@@ -53,17 +76,29 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # 这个必须有
     'django.middleware.common.CommonMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'common.middleware.gzip.GZipMiddleware',
     'common.middleware.static_headers_middleware.StaticHeadersMiddleware',
     'common.middleware.cross_domain_middleware.CrossDomainMiddleware',
     'common.middleware.doc_headers_middleware.DocHeadersMiddleware'
+    # 'corsheaders.middleware.CorsMiddleware',  # CORS 中间件
 ]
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=60 * 60 * 2)  # <-- 设置token有效时间
 }
+
+
+# CORS 配置
+CORS_ALLOW_ALL_ORIGINS = True  # 允许所有来源，等同于 FastAPI 的 allow_origins=["*"]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = ["*"]
+CORS_ALLOW_HEADERS = ["*"]
+
+
+# WSGI_APPLICATION = 'smartdoc.wsgi.application'
 
 APPS_DIR = os.path.join(PROJECT_DIR, 'apps')
 ROOT_URLCONF = 'smartdoc.urls'
@@ -131,14 +166,14 @@ CACHES = {
 
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'common.handle.handle_exception.handle_exception',
-    'DEFAULT_AUTHENTICATION_CLASSES': ['common.auth.authenticate.AnonymousAuthentication']
-
+    'DEFAULT_AUTHENTICATION_CLASSES': ['common.auth.authenticate.AnonymousAuthentication'],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 STATICFILES_DIRS = [(os.path.join(PROJECT_DIR, 'ui', 'dist'))]
 
 STATIC_ROOT = os.path.join(BASE_DIR.parent, 'static')
 
-WSGI_APPLICATION = 'smartdoc.wsgi.application'
+
 
 # 邮件配置
 EMAIL_ADDRESS = CONFIG.get('EMAIL_ADDRESS')

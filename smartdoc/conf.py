@@ -76,12 +76,18 @@ class DoesNotExist(Exception):
 class Config(dict):
     defaults = {
         # 数据库相关配置
-        "DB_NAME": "modeldev",
-        "DB_HOST": "127.0.0.1",
-        "DB_PORT": 5432,
-        "DB_USER": "root",
-        "DB_PASSWORD": "Password123@postgres",
-        "DB_ENGINE": "dj_db_conn_pool.backends.postgresql",
+        # "DB_NAME": "modeldev",
+        # "DB_HOST": "127.0.0.1",
+        # "DB_PORT": 5432,
+        # "DB_USER": "root",
+        # "DB_PASSWORD": "Password123@postgres",
+        # "DB_ENGINE": "dj_db_conn_pool.backends.postgresql",
+        "DB_NAME": "db.sqlite3",  # 改为SQLite数据库文件
+        "DB_HOST": "",  # SQLite不需要主机
+        "DB_PORT": "",  # SQLite不需要端口
+        "DB_USER": "",  # SQLite不需要用户
+        "DB_PASSWORD": "",  # SQLite不需要密码
+        "DB_ENGINE": "django.db.backends.sqlite3",  # 改为SQLite引擎
         "DB_MAX_OVERFLOW": 80,
         'LANGUAGE_CODE': 'zh-CN',
         # 向量模型
@@ -105,6 +111,13 @@ class Config(dict):
         return self.get('TIME_ZONE') if 'TIME_ZONE' in self else 'Asia/Shanghai'
 
     def get_db_setting(self) -> dict:
+        # 如果是SQLite，返回简化的配置
+        if self.get('DB_ENGINE') == 'django.db.backends.sqlite3':
+            return {
+                "NAME": self.get('DB_NAME'),
+                "ENGINE": self.get('DB_ENGINE'),
+            }
+        # 如果是PostgreSQL，返回完整配置
         return {
             "NAME": self.get('DB_NAME'),
             "HOST": self.get('DB_HOST'),

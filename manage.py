@@ -7,6 +7,9 @@ import sys
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'smartdoc.settings')
+        # 如果没有额外参数，就默认 runserver 0.0.0.0:8000
+    if len(sys.argv) == 1:
+        sys.argv += ["runserver", "0.0.0.0:8123"]
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

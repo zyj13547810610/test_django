@@ -1,0 +1,6 @@
+path: /home/zyjCode/model-develop-standard_dev/data/datasets/dataset_1
+train: images/train
+val: images/val
+nc: 1
+
+names: ["wheel_text"]

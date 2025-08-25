@@ -9,4 +9,6 @@ __all__ = ['BASE_DIR', 'PROJECT_DIR', 'VERSION', 'CONFIG']
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_DIR = os.path.dirname(BASE_DIR)
 VERSION = '1.0.0'
-CONFIG = ConfigManager.load_user_config(root_path=os.path.abspath('/opt/water/conf'))
+# CONFIG = ConfigManager.load_user_config(root_path=os.path.abspath('/opt/water/conf'))
+# 使用项目目录作为配置路径，而不是硬编码的Linux路径
+CONFIG = ConfigManager.load_user_config(root_path=BASE_DIR)

@@ -61,10 +61,11 @@ class Migration(migrations.Migration):
                  models.CharField(choices=[('DATASET', '数据集'), ('APPLICATION', '应用')], default='DATASET',
                                   max_length=128, verbose_name='授权目标')),
                 ('target', models.UUIDField(verbose_name='数据集/应用id')),
-                ('operate', django.contrib.postgres.fields.ArrayField(
-                    base_field=models.CharField(blank=True, choices=[('MANAGE', '管理'), ('USE', '使用')],
-                                                default='USE', max_length=256), size=None,
-                    verbose_name='权限操作列表')),
+                # ('operate', django.contrib.postgres.fields.ArrayField(
+                #     base_field=models.CharField(blank=True, choices=[('MANAGE', '管理'), ('USE', '使用')],
+                #                                 default='USE', max_length=256), size=None,
+                #     verbose_name='权限操作列表')),
+                ('operate', models.JSONField(default=list, verbose_name='权限操作列表')),
                 ('member', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='setting.teammember',
                                              verbose_name='团队成员')),
             ],

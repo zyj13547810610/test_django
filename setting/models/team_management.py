@@ -16,6 +16,9 @@ from common.mixins.app_model_mixin import AppModelMixin
 from users.models import User
 
 
+from django.conf import settings
+from django.db import models
+
 class AuthTargetType(models.TextChoices):
     """授权目标"""
     DATASET = Group.DATASET.value, '数据集'
@@ -62,12 +65,28 @@ class TeamMemberPermission(AppModelMixin):
 
     target = models.UUIDField(max_length=128, verbose_name="数据集/应用id")
 
-    operate = ArrayField(verbose_name="权限操作列表",
-                         base_field=models.CharField(max_length=256,
-                                                     blank=True,
-                                                     choices=AuthOperate.choices,
-                                                     default=AuthOperate.USE),
-                         )
+    # operate = ArrayField(verbose_name="权限操作列表",
+    #                      base_field=models.CharField(max_length=256,
+    #                                                  blank=True,
+    #                                                  choices=AuthOperate.choices,
+    #                                                  default=AuthOperate.USE),
+    #                      )
+    
+    if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2':
+        operate_field = ArrayField(
+            base_field=models.CharField(
+                max_length=256,
+                blank=True,
+                choices=AuthOperate.choices,
+                default=AuthOperate.USE
+            ),
+            verbose_name="权限操作列表"
+        )
+    else:
+        operate_field = models.JSONField(
+            default=list,
+            verbose_name="权限操作列表"
+        )
 
     class Meta:
         db_table = "team_member_permission"

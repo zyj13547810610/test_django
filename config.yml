@@ -1,0 +1,13 @@
+DB_NAME: db.sqlite3
+DB_HOST: 
+DB_PORT: 
+DB_USER: 
+DB_PASSWORD: 
+DB_ENGINE: django.db.backends.sqlite3
+
+DEBUG: true
+
+TIME_ZONE: Asia/Shanghai
+
+# API文档密码 - 默认密码
+DOC_PASSWORD: "water is good" 

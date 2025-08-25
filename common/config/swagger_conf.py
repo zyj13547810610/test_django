@@ -10,7 +10,8 @@ from drf_yasg.generators import OpenAPISchemaGenerator
 from drf_yasg.inspectors import SwaggerAutoSchema
 
 tags_dict = {
-    'user': '用户'
+    'user': '用户',
+    # '数学运算': '数学运算'  # 添加数学运算分类
 }
 
 
